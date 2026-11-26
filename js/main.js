@@ -106,21 +106,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Validaciones básicas de campos de entrega
       if (!nombre || !calle || !ciudad || !provincia || !codigoPostal || !telefono) {
-        alert('Por favor, completa todos los campos requeridos para el envío.');
+        showAlert('⚠️ Campos incompletos', 'Por favor, completa todos los campos requeridos para el envío: nombre, dirección, ciudad, provincia, código postal y teléfono.');
         return;
       }
 
       // Validar teléfono español básico
       const cleanPhone = telefono.replace(/[\s-]/g, '');
       if (cleanPhone.length < 9) {
-        alert('Por favor introduce un número de teléfono válido para que el repartidor pueda llamarte.');
+        showAlert('📞 Teléfono inválido', 'Por favor introduce un número de teléfono válido para que el repartidor pueda llamarte.');
         document.getElementById('telefono')?.focus();
         return;
       }
 
       // Validar código postal
       if (!/^\d{5}$/.test(codigoPostal)) {
-        alert('Por favor introduce un Código Postal válido de 5 dígitos.');
+        showAlert('📮 Código Postal inválido', 'Por favor introduce un Código Postal válido de 5 dígitos.');
         document.getElementById('codigoPostal')?.focus();
         return;
       }
@@ -213,6 +213,50 @@ document.addEventListener('DOMContentLoaded', () => {
       orderModal.classList.add('hidden');
       document.body.classList.remove('overflow-hidden');
     });
+  }
+
+  // ── Modal de alertas personalizadas ──────────────────────────────
+  function showAlert(title, message) {
+    // Crear el modal si no existe todavía
+    let alertModal = document.getElementById('custom-alert-modal');
+    if (!alertModal) {
+      alertModal = document.createElement('div');
+      alertModal.id = 'custom-alert-modal';
+      alertModal.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4';
+      alertModal.innerHTML = `
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="alert-backdrop"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center animate-bounce-in">
+          <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl" id="alert-icon">⚠️</span>
+          </div>
+          <h3 class="text-lg font-bold text-stone-900 mb-2" id="alert-title"></h3>
+          <p class="text-sm text-stone-600 leading-relaxed mb-5" id="alert-message"></p>
+          <button id="alert-close-btn"
+            class="w-full bg-wine-800 hover:bg-wine-900 active:scale-95 text-white font-bold py-3 px-6 rounded-xl transition text-sm">
+            Entendido
+          </button>
+        </div>
+      `;
+      document.body.appendChild(alertModal);
+
+      // Cerrar al hacer clic en el fondo o en el botón
+      document.getElementById('alert-backdrop').addEventListener('click', closeAlert);
+      document.getElementById('alert-close-btn').addEventListener('click', closeAlert);
+    }
+
+    // Rellenar contenido
+    document.getElementById('alert-title').textContent = title;
+    document.getElementById('alert-message').textContent = message;
+    alertModal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+  }
+
+  function closeAlert() {
+    const alertModal = document.getElementById('custom-alert-modal');
+    if (alertModal) {
+      alertModal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
   }
 
   // FAQ Accordion
