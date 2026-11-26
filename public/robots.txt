@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Bloquear rutas de API
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://ibericosgourmett.vercel.app/sitemap.xml
