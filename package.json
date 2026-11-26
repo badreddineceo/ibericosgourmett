@@ -1,0 +1,29 @@
+{
+  "name": "jamon-guijuelo-node",
+  "version": "1.0.0",
+  "description": "Aplicación web completa en Node.js para venta de Jamón Ibérico de Guijuelo con pago a contrarrembolso",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "jamon-guijuelo",
+    "ecommerce",
+    "contrarrembolso",
+    "vercel"
+  ],
+  "author": "",
+  "license": "ISC"
+}

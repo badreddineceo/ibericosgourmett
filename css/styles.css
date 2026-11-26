@@ -1,0 +1,132 @@
+/* Custom gourmet styling and mobile optimizations */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap');
+
+:root {
+  --color-wine-dark: #4a000e;
+  --color-wine-primary: #780016;
+  --color-wine-light: #941324;
+  --color-gold: #d4af37;
+  --color-gold-light: #f3e5ab;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #27272a;
+  background-color: #fbfbf9;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Evitar que iOS Safari haga zoom automático al tocar un input (requiere mínimo 16px de fuente) */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Shimmer animation for CTA buttons */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  animation: shimmer 3.5s infinite;
+}
+
+/* Pack selector cards styling */
+.pack-card {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.pack-card:active {
+  transform: scale(0.98);
+}
+
+.pack-card.selected {
+  border-color: #780016;
+  background-color: #fff9fa;
+  box-shadow: 0 4px 15px rgba(120, 0, 22, 0.12);
+}
+
+.pack-card.selected .radio-circle {
+  border-color: #780016;
+  background-color: #780016;
+}
+
+.pack-card.selected .radio-circle::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  margin: auto;
+}
+
+/* Form input focus styles */
+.form-input {
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  min-height: 48px; /* Tamaño táctil ergonómico para dedos en móvil */
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #780016;
+  box-shadow: 0 0 0 3px rgba(120, 0, 22, 0.12);
+  background-color: #ffffff;
+}
+
+/* Modal styling con scroll interno fluido en móviles */
+.modal-backdrop {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Barra inferior flotante fija en móviles (Sticky Bottom Bar) */
+.mobile-sticky-bar {
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.mobile-sticky-bar.hidden-bar {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+}

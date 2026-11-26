@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/privacidad", "destination": "/privacidad.html" },
+    { "source": "/aviso-legal", "destination": "/aviso-legal.html" },
+    { "source": "/terminos", "destination": "/terminos.html" },
+    { "source": "/cookies", "destination": "/cookies.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+      ]
+    }
+  ]
+}
