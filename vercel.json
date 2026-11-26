@@ -2,10 +2,13 @@
   "version": 2,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/privacidad", "destination": "/privacidad.html" },
-    { "source": "/aviso-legal", "destination": "/aviso-legal.html" },
-    { "source": "/terminos", "destination": "/terminos.html" },
-    { "source": "/cookies", "destination": "/cookies.html" }
+    { "source": "/images/:path*", "destination": "/public/images/:path*" },
+    { "source": "/css/:path*",    "destination": "/css/:path*" },
+    { "source": "/js/:path*",     "destination": "/js/:path*" },
+    { "source": "/privacidad",    "destination": "/privacidad.html" },
+    { "source": "/aviso-legal",   "destination": "/aviso-legal.html" },
+    { "source": "/terminos",      "destination": "/terminos.html" },
+    { "source": "/cookies",       "destination": "/cookies.html" }
   ],
   "headers": [
     {
@@ -13,7 +16,20 @@
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml" }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain" }
       ]
     }
   ]
