@@ -53,11 +53,34 @@ async function startServer() {
     // Servir archivos estáticos
     app.use('/css', express.static(path.join(__dirname, 'css')));
     app.use('/js', express.static(path.join(__dirname, 'js')));
+    app.use('/images', express.static(path.join(__dirname, 'public/images')));
+    app.use('/images', express.static(path.join(__dirname, 'images')));
     app.use('/public', express.static(path.join(__dirname, 'public')));
+
+    // Rutas SEO raíz
+    app.get('/sitemap.xml', (req, res) => {
+      res.type('application/xml').sendFile(path.join(__dirname, 'sitemap.xml'));
+    });
+    app.get('/robots.txt', (req, res) => {
+      res.type('text/plain').sendFile(path.join(__dirname, 'robots.txt'));
+    });
 
     // Rutas de páginas web
     app.get('/', (req, res) => {
       res.sendFile(path.join(__dirname, 'index.html'));
+    });
+
+    app.get('/blog', (req, res) => {
+      res.sendFile(path.join(__dirname, 'blog', 'index.html'));
+    });
+
+    app.get('/blog/:slug', (req, res) => {
+      const slug = req.params.slug.replace(/\.html$/, '');
+      const articlePath = path.join(__dirname, 'blog', `${slug}.html`);
+      if (fs.existsSync(articlePath)) {
+        return res.sendFile(articlePath);
+      }
+      return res.status(404).sendFile(path.join(__dirname, 'blog', 'index.html'));
     });
 
     app.get('/privacidad', (req, res) => {
@@ -111,8 +134,12 @@ async function startServer() {
       '.css': 'text/css; charset=UTF-8',
       '.js': 'text/javascript; charset=UTF-8',
       '.json': 'application/json',
+      '.xml': 'application/xml; charset=UTF-8',
+      '.txt': 'text/plain; charset=UTF-8',
       '.png': 'image/png',
       '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.webp': 'image/webp',
       '.svg': 'image/svg+xml',
       '.ico': 'image/x-icon'
     };
@@ -169,14 +196,28 @@ async function startServer() {
         }
       }
 
-      // Mapear rutas limpias a archivos HTML
+      // Mapear rutas limpias a archivos HTML (archivos .html o directorios con index.html)
       if (pathname === '/' || pathname === '') {
         pathname = '/index.html';
-      } else if (!path.extname(pathname) && fs.existsSync(path.join(__dirname, `${pathname}.html`))) {
-        pathname = `${pathname}.html`;
+      } else {
+        const cleanPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+        if (!path.extname(cleanPath)) {
+          if (fs.existsSync(path.join(__dirname, `${cleanPath}.html`))) {
+            pathname = `${cleanPath}.html`;
+          } else if (fs.existsSync(path.join(__dirname, cleanPath, 'index.html'))) {
+            pathname = path.join(cleanPath, 'index.html');
+          }
+        }
       }
 
-      const filePath = path.join(__dirname, pathname);
+      // Resolver /images/... desde public/images si no existe en ./images
+      let filePath = path.join(__dirname, pathname);
+      if (pathname.startsWith('/images/') && !fs.existsSync(filePath)) {
+        const publicImgPath = path.join(__dirname, 'public', pathname);
+        if (fs.existsSync(publicImgPath)) {
+          filePath = publicImgPath;
+        }
+      }
       const ext = path.extname(filePath).toLowerCase();
       const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 

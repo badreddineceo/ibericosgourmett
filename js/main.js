@@ -62,6 +62,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobilePrice) mobilePrice.textContent = current.price;
   }
 
+  // Preseleccionar pack si viene desde el blog o un enlace con ?pack=pack-5 / ?pack=pack-10
+  const urlParams = new URLSearchParams(window.location.search);
+  const packFromUrl = urlParams.get('pack');
+  if (packFromUrl && packs[packFromUrl]) {
+    updatePackSelection(packFromUrl);
+  } else {
+    updatePackSelection(selectedPack);
+  }
+
   // Event Listeners para selección de pack
   if (packCard5) {
     packCard5.addEventListener('click', () => updatePackSelection('pack-5'));
